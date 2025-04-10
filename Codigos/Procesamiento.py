@@ -1,6 +1,5 @@
 import pandas as pd
 import nltk
-nltk.download('punkt_tab')
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 import re
@@ -11,25 +10,20 @@ from tkinter import filedialog, messagebox
 lemmatizer = WordNetLemmatizer()
 stop_words = set(stopwords.words('spanish'))  # Stopwords en español
 
-# Preprocesamiento del texto
+# Función para preprocesar texto
 def preprocess_text(text):
     """Aplica limpieza, tokenización, eliminación de stopwords y lematización al texto."""
     if pd.isna(text):
         return ""
 
-    # Limpiar el texto
     text = re.sub(r'[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]', '', text)
     text = text.lower()
-
-    # Tokenización
     tokens = nltk.word_tokenize(text)
-
-    # Eliminar stopwords y lematizar
     tokens = [lemmatizer.lemmatize(token) for token in tokens if token not in stop_words]
 
     return ' '.join(tokens)
 
-# Normalizar y guardar el corpus
+# Función para normalizar y guardar el corpus
 def normalize_and_save_corpus(input_path, output_path):
     """Carga el corpus, normaliza el contenido y título, y guarda el nuevo corpus."""
     try:
@@ -49,16 +43,17 @@ def normalize_and_save_corpus(input_path, output_path):
         messagebox.showerror("Error", f"No se pudo procesar el archivo: {str(e)}")
 
 # Función para cargar archivo
-def load_file():
+def load_file(entry):
+    """Muestra un cuadro de diálogo para seleccionar un archivo y actualiza la entrada."""
     file_path = filedialog.askopenfilename(filetypes=[("Archivos CSV", "*.csv")])
     if file_path:
-        entry_input.delete(0, tk.END)
-        entry_input.insert(0, file_path)
+        entry.delete(0, tk.END)
+        entry.insert(0, file_path)
 
-# Función para ejecutar procesamiento
-def process_corpus():
-    input_path = entry_input.get()
-    
+# Función para procesar el corpus
+def process_corpus(entry):
+    """Solicita la ubicación del archivo de salida y normaliza el corpus."""
+    input_path = entry.get()
     if not input_path:
         messagebox.showwarning("Advertencia", "Debe seleccionar un archivo de entrada.")
         return
@@ -69,19 +64,12 @@ def process_corpus():
     
     normalize_and_save_corpus(input_path, output_path)
 
-# Creación de la interfaz
-top = tk.Tk()
-top.title("Procesamiento de Corpus")
-top.geometry("500x250")
+# Función para crear la pestaña en la GUI principal
+def create_procesamiento_ui(frame_procesamiento):
+    """Crea la interfaz de la pestaña de procesamiento en la GUI principal."""
+    tk.Label(frame_procesamiento, text="Archivo de entrada:").pack(pady=5)
+    entry_input = tk.Entry(frame_procesamiento, width=50)
+    entry_input.pack()
 
-# Etiqueta y campo para archivo de entrada
-tk.Label(top, text="Archivo de entrada:").pack(pady=5)
-entry_input = tk.Entry(top, width=50)
-entry_input.pack()
-tk.Button(top, text="Seleccionar archivo", command=load_file).pack(pady=5)
-
-# Botón para procesar
-tk.Button(top, text="Procesar Corpus", command=process_corpus, bg="green", fg="black").pack(pady=10)
-
-# Ejecutar interfaz
-top.mainloop()
+    tk.Button(frame_procesamiento, text="Seleccionar archivo", command=lambda: load_file(entry_input)).pack(pady=5)
+    tk.Button(frame_procesamiento, text="Procesar Corpus", command=lambda: process_corpus(entry_input), bg="green", fg="black").pack(pady=10)

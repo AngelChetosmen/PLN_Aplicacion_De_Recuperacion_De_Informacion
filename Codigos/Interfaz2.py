@@ -14,6 +14,7 @@ from nltk.corpus import stopwords
 class PoemAnalyzerApp:
     def __init__(self, master):
         self.master = master
+        self.results = []
         if isinstance(master,tk.Tk):
             master.title("Analizador de Poemas")
 
@@ -125,6 +126,9 @@ class PoemAnalyzerApp:
                 results_text += f"{idx + 1}. {df['normalized_title'][index]} - Línea: {line_number} - Similitud: {poem_similarities_combined[index]:.4f}\n"
             
             # Mostrar resultados
+
+            self.results = [(df['normalized_title'][index], poem_similarities_combined[index]) for index in similar_indices]
+            
             self.results_area.delete("1.0", tk.END)  # Limpiar área de resultados antes de mostrar nuevos resultados
             self.results_area.insert(tk.END, results_text)
 
