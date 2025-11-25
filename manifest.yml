@@ -1,0 +1,17 @@
+# manifest.yml
+# Este archivo está diseñado para plataformas Cloud Foundry, como SAP BTP.
+
+applications:
+  - name: pln-recuperacion-poemas       # Nombre único para tu aplicación
+    memory: 512M                       # Memoria asignada (ajustar según necesidad, 512M es un buen punto de inicio)
+    disk_quota: 1G                     # Cuota de disco (ajustar si tu corpus es grande)
+    instances: 1                       # Número de instancias (empieza con 1)
+    buildpacks:                        # Indica que es una aplicación Python
+      - python_buildpack
+    # El comando de inicio usa Gunicorn para servir la app
+    # -b 0.0.0.0:${PORT} asegura que Gunicorn use el puerto asignado por la plataforma.
+    # El worker por defecto es 'wsgi:application' que apunta a wsgi.py
+    command: gunicorn --workers 4 --threads 2 --timeout 60 wsgi:application -b 0.0.0.0:${PORT}
+    # Ruta donde se sirve la app (opcional, se puede configurar automáticamente)
+    # routes:
+    #   - route: mi-app-poemas.ejemplo.com
