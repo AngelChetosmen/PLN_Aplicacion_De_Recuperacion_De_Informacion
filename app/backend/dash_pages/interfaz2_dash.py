@@ -5,7 +5,7 @@ from dash import html, dcc, callback, Input, Output, State, no_update
 import dash_bootstrap_components as dbc
 import pandas as pd
 from sentence_transformers import SentenceTransformer, util
-from Codigos.Procesamiento import preprocess_text
+from app.backend.Codigos.Procesamiento import preprocess_text
 import torch
 import base64
 import io

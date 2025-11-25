@@ -9,8 +9,8 @@ import base64
 import io
 
 # Importa la lógica refactorizada
-from Codigos.Representacion import tfidf_vectorization, calculate_cosine_similarity
-from Codigos.Procesamiento import preprocess_text # Para procesar el poema de entrada
+from app.backend.Codigos.Representacion import tfidf_vectorization, calculate_cosine_similarity
+from app.backend.Codigos.Procesamiento import preprocess_text # Para procesar el poema de entrada
 
 dash.register_page(__name__, path='/similitud-coseno', name='Similitud Coseno')
 
